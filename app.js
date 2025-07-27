@@ -25,8 +25,7 @@ const passport = require("passport");// import passprt
 const User = require("./models/user.js");
 const LocalStrategy = require('passport-local').Strategy; //import local strategy from passport
 
-const MONGO_URL = process.env.MONGO_URL || "mongodb://127.0.0.1:27017/wanderlust";
-
+const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
 main()
   .then(() => {
@@ -48,7 +47,7 @@ app.engine("ejs",ejsMate);
 app.use(express.static(path.join(__dirname,"public")))
 
 const sessionOptions = {
-  secret: process.env.SESSION_SECRET || "fallbacksecret",
+  secret:"mysupersecretcode",
   resave: false,
   saveUninitialized: true,
   cookie:{
@@ -95,9 +94,6 @@ app.get("/demouser",async (req,res) => {
 app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
 app.use("/",userRouter);
-app.get("/", (req, res) => {
-  res.redirect("/listings");
-});
 
 app.all("*",(req,res,next)=>{
   next(new ExpressError(404,"Page Not Found"));
@@ -109,7 +105,6 @@ app.use((err,req,res,next)=>{
   // res.status(statusCode).send(message);
 });
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+app.listen(8080, () => {
+  console.log("server is listening to port 8080");
 });
