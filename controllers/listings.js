@@ -4,8 +4,18 @@ const mapToken=process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
 module.exports.index = async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs", { allListings });
+    const searchTerm = typeof req.query.q === "string" ? req.query.q.trim().slice(0, 100) : "";
+    const searchTerms = searchTerm.split(/\s+/).filter(Boolean).slice(0, 8);
+    const filter = searchTerm
+      ? {
+          $and: searchTerms.map((term) => {
+            const searchPattern = new RegExp(term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+            return { $or: [{ title: searchPattern }, { location: searchPattern }] };
+          }),
+        }
+      : {};
+    const allListings = await Listing.find(filter);
+    res.render("listings/index.ejs", { allListings, searchTerm });
 };
 
 module.exports.renderNewForm=(req, res) => {
@@ -24,9 +34,8 @@ module.exports.showListing=async (req, res) => {
   .populate("owner");
     if(!listing){
         req.flash("error","Listing you requested for does not exist!");
-        res.redirect("/listings");
+        return res.redirect("/listings");
     }
-    console.log(listing.geometry.coordinates);
     res.render("listings/show.ejs", { listing });
 };
 

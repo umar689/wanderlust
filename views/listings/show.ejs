@@ -1,9 +1,4 @@
 <% layout("/layouts/boilerplate") %>
-<script>
-  const mapToken="<%=process.env.MAP_TOKEN%>";
-  const listing=<%-JSON.stringify(listing)%>;
-  
-</script>
     <div class="row mt-3">
       <div class="col-8 offset-3">
         <h3> <%= listing.title %></h3>
@@ -22,7 +17,7 @@
     <% if(currUser && listing.owner._id.equals(currUser._id)){ %>
     <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark col-1 offset-3 add-btn" style="z-index: 7;">Edit</a>
     <div class="btns">
-      <form method="POST" style="margin-top: -2.3rem;margin-bottom: 1rem;margin-left: -6rem;" action="/listings/<%=listing._id%>?_method=DELETE">
+      <form method="POST" style="margin-top: -2.3rem;margin-bottom: 1rem;margin-left: -6rem;" action="/listings/<%=listing._id%>?_method=DELETE" data-confirm data-confirm-title="Delete this stay?" data-confirm-message="This stay and its associated reviews will be permanently removed." data-confirm-action="Yes, delete stay">
         <button class="btn btn-dark offset-5 pp">Delete</button>
       </form>
     </div>
@@ -76,7 +71,7 @@
             <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
             <p class="card-text"><%= review.comment %></p>
           </div>
-          <form method="post" action="/listings/<%=listing.id%>/reviews/<%=review.id%>?_method=DELETE">
+          <form method="post" action="/listings/<%=listing.id%>/reviews/<%=review.id%>?_method=DELETE" data-confirm data-confirm-title="Delete this review?" data-confirm-message="This review will be permanently removed." data-confirm-action="Yes, delete review">
             <button class="btn btn-sm btn-dark mb-3 mt-3">Delete</button>
           </form>
         </div>
@@ -86,25 +81,45 @@
     </div>
     <div class="col-6 offset-3 mb-3">
       <h3>Where you'll be</h3>
-      <div id="map"></div>
+      <div
+        id="map"
+        data-map-token="<%= process.env.MAP_TOKEN || '' %>"
+        data-coordinates="<%= JSON.stringify(listing.geometry && listing.geometry.coordinates ? listing.geometry.coordinates : []) %>"
+        data-listing-title="<%= listing.title %>"
+      ></div>
   </div>
   </div>
   <script>
-        mapboxgl.accessToken = "pk.eyJ1IjoidW1hcnRoZXByb2dyYW1tZXIiLCJhIjoiY201cHFkNGI3MDNyazJsczdtaXYwbjFxOSJ9.ZhGskCYs6ewauwkHUNA9DQ";
-  const map = new mapboxgl.Map({
-      container: 'map', // container ID
-      style:"mapbox://styles/mapbox/streets-v12",
-      center:listing.geometry.coordinates,// starting position [lng, lat]. Note that lat must be set between -90 and 90
-      zoom: 9 // starting zoom
-  });
-  const marker = new mapboxgl.Marker({color:'red'})
-  .setLngLat(listing.geometry.coordinates)
-  .setPopup(new mapboxgl.Popup({offset: 25})
-  .setHTML(`<h4>${listing.title}</h4><p>Exact location provided after booking</p>`))
-  .addTo(map);
+    const mapElement = document.getElementById("map");
+    const mapToken = mapElement.dataset.mapToken;
+    const coordinates = JSON.parse(mapElement.dataset.coordinates);
 
-  // const marker=new mapboxgl.Marker()
-  // .setLngLat(coordinates)
-  // .addTo(map);
+    const validCoordinates = Array.isArray(coordinates)
+      && coordinates.length === 2
+      && coordinates.every((coordinate) => typeof coordinate === "number" && Number.isFinite(coordinate));
+
+    if (typeof mapboxgl !== "undefined" && mapToken && validCoordinates) {
+      mapboxgl.accessToken = mapToken;
+      const map = new mapboxgl.Map({
+        container: mapElement,
+        style: "mapbox://styles/mapbox/streets-v12",
+        center: coordinates,
+        zoom: 9
+      });
+      const popupContent = document.createElement("div");
+      const popupTitle = document.createElement("h4");
+      const popupDescription = document.createElement("p");
+
+      popupTitle.textContent = mapElement.dataset.listingTitle;
+      popupDescription.textContent = "Exact location provided after booking";
+      popupContent.append(popupTitle, popupDescription);
+
+      new mapboxgl.Marker({ color: "#111310" })
+        .setLngLat(coordinates)
+        .setPopup(new mapboxgl.Popup({ offset: 25 }).setDOMContent(popupContent))
+        .addTo(map);
+    } else {
+      mapElement.textContent = "Map unavailable. Configure a valid Mapbox token and listing location to enable it.";
+    }
   </script>
 <!-- <script src="/js/map.js"></script> -->

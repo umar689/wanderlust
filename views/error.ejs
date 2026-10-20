@@ -1,6 +1,10 @@
 <% layout("/layouts/boilerplate") %>
-<div class="row col-6 mt-4 offset-3">
-    <div class="alert alert-danger" role="alert">
-        <div class="row col-6 offset-3"><h3><%= message %></h3></div>
-    </div>
-</div>
+<main class="wander-error-page">
+  <div class="wander-error-card" role="alert">
+    <span class="wander-error-icon" aria-hidden="true"><i class="fa-solid fa-compass"></i></span>
+    <span class="wander-error-kicker">A SMALL DETOUR</span>
+    <h1>Well, this is unexpected.</h1>
+    <p><%= message %></p>
+    <a href="/listings" class="pill-button pill-button-dark">Back to exploring <i class="fa-solid fa-arrow-right"></i></a>
+  </div>
+</main>

@@ -1,127 +1,133 @@
 <% layout("/layouts/boilerplate") %>
-    <style>
-      #filters{
-        display:flex;
-        flex-wrap:wrap;
-        align-items: center;
-      }
-      .filter{
-        text-align: center;
-        margin-right: 2rem;
-        margin-top: 2rem;
-        opacity: 0.7;
-      }
-      .filter:hover{
-        opacity: 1;
-        cursor: pointer;
-      }
-      .filter p{
-        font-size: 0.7rem;
-      }
-      .tax-info{
-        display: none;
-      }
-      .tax-toggle{
-        border:1px solid black;
-        border-radius: 1rem;
-        height: 3.5rem;
-        padding: 1rem;
-        margin-left: 0rem;
-        display: flex;
-        align-items: center;
-      }
-    </style>
-    <div id="filters">
-      <div class="filter">
-        <div><i class="fa-solid fa-fire"></i></div>
-        <p>Trending</p>
+<main class="listings-page">
+  <% const featuredStay = allListings[0]; %>
+  <section class="wander-hero reveal">
+    <div class="wander-hero-copy">
+      <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR NEXT CHAPTER STARTS HERE</div>
+      <h1>Somewhere<br>different <span>awaits.</span></h1>
+      <p class="wander-hero-intro">Find the places that make you feel a little further away from ordinary.</p>
+      <div class="wander-hero-actions">
+        <a class="pill-button pill-button-dark" href="#stays">Explore stays <i class="fa-solid fa-arrow-down"></i></a>
+        <a class="text-link" href="/listings/new">Share your place <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
       </div>
-      <div class="filter">
-        <div><i class="fa-solid fa-bed"></i></div>
-        <p>Rooms</p>
-      </div>
-      <div class="filter">
-        <div><i class="fa-solid fa-mountain-city"></i></div>
-        <p>Iconic cities</p>
-      </div>
-      <div class="filter">
-        <div><i class="fa-solid fa-mountain"></i></div>
-        <p>Mountains</p>
-      </div>
-      <div class="filter">
-        <div><i class="fa-solid fa-chess-rook"></i></div>
-        <p>Castles</p>
-      </div>
-      <div class="filter">
-        <div><i class="fa-solid fa-person-swimming"></i></div>
-        <p>Amazing Pools</p>
-      </div>
-      <div class="filter">
-        <div><i class="fa-solid fa-campground"></i></div>
-        <p>Camping</p>
-      </div>
-      <div class="filter">
-        <div><i class="fa-solid fa-cow"></i></div>
-        <p>Farms</p>
-      </div>
-      <div class="filter">
-        <div><i class="fa-regular fa-snowflake"></i></div>
-        <p>Arctic</p>
-      </div>
-      <div class="filter">
-        <div><i class="fa-solid fa-igloo"></i></div>
-        <p>Domes</p>
-      </div>
-      <div class="filter">
-        <div><i class="fa-solid fa-ship"></i></div>
-        <p>Boats</p>
-      </div>
-      <div class="tax-toggle">
-      <div class="form-check-reverse form-switch">
-        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-        <label class="form-check-label" for="flexSwitchCheckDefault">Display total after taxes</label>
-      </div>
-      </div>
+      <div class="hero-footnote"><span>01 / EVERYWHERE</span><span>Made for the way you wander</span></div>
     </div>
-
-    <!-- <h3>All Listings</h3> -->
-    <!-- <form method="GET" action="/listings/new">
-      <button>Create New Listing</button>
-    </form> -->
-    <div class="row row-cols-lg-3  row-cols-md-2  row-cols-sm-1">
-  
-      <% for(let listing of allListings) { %>
-  <a href="/listings/<%= listing._id %>" style="text-decoration: none;"> 
-    <div class="card col listing-card">
-      <% if (listing.image && listing.image.url) { %>
-        <img src="<%= listing.image.url %>" class="card-img-top" style="height: 20rem" alt="...">
-      <% } else { %>
-        <img src="https://via.placeholder.com/400x300?text=No+Image" class="card-img-top" style="height: 20rem" alt="No image">
+    <div class="wander-hero-visual">
+      <div class="hero-image-backdrop"></div>
+      <img class="hero-image" src="<%= featuredStay && featuredStay.image && featuredStay.image.url ? featuredStay.image.url : 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1400&q=85' %>" alt="<%= featuredStay ? featuredStay.title : 'A quiet coastal escape' %>">
+      <div class="hero-image-shade"></div>
+      <div class="hero-image-caption">
+        <span class="caption-kicker"><%= featuredStay ? 'A PLACE TO BEGIN' : 'THE WORLD, A LITTLE CLOSER' %></span>
+        <span class="caption-title"><%= featuredStay ? featuredStay.title : 'Find your somewhere' %></span>
+        <span class="caption-location"><i class="fa-solid fa-location-dot"></i> <%= featuredStay ? featuredStay.location : 'Your next favourite place' %></span>
+      </div>
+      <% if (featuredStay) { %>
+        <a class="hero-image-link" href="/listings/<%= featuredStay._id %>" aria-label="View <%= featuredStay.title %>">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+        </a>
       <% } %>
-      <div class="card-img-overlay"><li><p><%= listing.description %></p></li></div>
-      <div class="card-body">
-        <p class="card-text" style="padding: 5px 5px 5px 10px;">
-          <b><%= listing.title %></b><br>
-          &#8377;<%= listing.price ? Number(listing.price).toLocaleString("en-IN") : "Price not available" %> /night
-          <span class="tax-info">&nbsp;&nbsp;<i>+18% GST</i>=&#8377;<%= listing.price + 0.18 * listing.price %>/night</span>
-        </p>
+      <span class="hero-image-index">W / 001</span>
+    </div>
+    <div class="hero-orbit" aria-hidden="true"><i class="fa-solid fa-compass"></i></div>
+  </section>
+
+  <section class="wander-manifesto reveal">
+    <div class="manifesto-topline"><span>THE ART OF GETTING AWAY</span><span><%= allListings.length %> PLACES TO DISCOVER</span></div>
+    <div class="manifesto-content">
+      <h2>Go where the<br><span>feeling takes you.</span></h2>
+      <p>Not just somewhere to stay. A little more room to breathe, a different view to wake up to, and stories worth bringing home.</p>
+    </div>
+    <div class="wander-marquee" aria-label="Find your own way, take the scenic route, stay a little longer">
+      <div class="marquee-track" aria-hidden="true">
+        <% for (let i = 0; i < 4; i++) { %>
+          <span>FIND YOUR OWN WAY <i class="fa-solid fa-asterisk"></i> TAKE THE SCENIC ROUTE <i class="fa-solid fa-asterisk"></i> STAY A LITTLE LONGER <i class="fa-solid fa-asterisk"></i></span>
+        <% } %>
       </div>
     </div>
-  </a>
-<% } %>
+  </section>
 
+  <section class="stays-section" id="stays">
+    <div class="stays-heading reveal">
+      <div>
+        <div class="eyebrow"><span class="eyebrow-dot"></span> THE GOOD PLACES</div>
+        <h2><%= searchTerm ? "Found your somewhere." : "Stay a while." %></h2>
+      </div>
+      <div class="stays-heading-aside">
+        <p><%= searchTerm ? `${allListings.length} result${allListings.length === 1 ? "" : "s"} for “${searchTerm}”` : "A collection of places with a little something extra." %></p>
+        <a class="round-arrow" href="/listings/new" aria-label="Add a new stay"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+      </div>
     </div>
+
+    <div class="stays-toolbar reveal">
+      <div class="stay-tags" aria-label="Explore stays">
+        <span class="stay-tag stay-tag-active">All places <span><%= allListings.length %></span></span>
+        <span class="stay-tag">The slow road</span>
+        <span class="stay-tag">Open horizons</span>
+      </div>
+      <label class="tax-toggle" for="flexSwitchCheckDefault">
+        <span>Show total with taxes</span>
+        <span class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+        </span>
+      </label>
+    </div>
+
+    <% if (allListings.length) { %>
+      <div class="stays-grid">
+        <% for (let [index, listing] of allListings.entries()) { %>
+          <a class="stay-card reveal" href="/listings/<%= listing._id %>" style="--card-index: <%= index %>">
+            <div class="stay-card-image-wrap">
+              <% if (listing.image && listing.image.url) { %>
+                <img src="<%= listing.image.url %>" class="stay-card-image" alt="<%= listing.title %>" loading="lazy">
+              <% } else { %>
+                <img src="https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?auto=format&fit=crop&w=1000&q=80" class="stay-card-image" alt="<%= listing.title %>" loading="lazy">
+              <% } %>
+              <span class="stay-card-number">W / <%= String(index + 1).padStart(3, "0") %></span>
+              <span class="stay-card-arrow"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+            </div>
+            <div class="stay-card-details">
+              <div>
+                <h3><%= listing.title %></h3>
+                <p><i class="fa-solid fa-location-dot"></i> <%= listing.location %></p>
+              </div>
+              <p class="stay-card-price"><strong>&#8377;<%= listing.price ? Number(listing.price).toLocaleString("en-IN") : "—" %></strong><span> / night</span>
+                <span class="tax-info">&nbsp; · &nbsp;incl. 18% GST <%= listing.price ? "₹" + Number(listing.price * 1.18).toLocaleString("en-IN") : "" %></span>
+              </p>
+            </div>
+          </a>
+        <% } %>
+      </div>
+    <% } else { %>
+      <div class="empty-stays reveal">
+        <span class="empty-stays-icon"><i class="fa-regular fa-compass"></i></span>
+        <% if (searchTerm) { %>
+          <h3>No stays matched “<%= searchTerm %>”.</h3>
+          <p>Try another destination or browse all the places we have.</p>
+          <a class="pill-button pill-button-dark" href="/listings">Browse all stays <i class="fa-solid fa-arrow-right"></i></a>
+        <% } else { %>
+          <h3>Your next favourite place is still out there.</h3>
+          <p>Be the first to share a stay with the Wanderlust community.</p>
+          <a class="pill-button pill-button-dark" href="/listings/new">Add a place <i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <% } %>
+      </div>
+    <% } %>
+  </section>
+
+  <section class="wander-closer reveal">
+    <span class="closer-kicker">A GOOD PLACE CHANGES EVERYTHING</span>
+    <div class="closer-content">
+      <h2>Make room<br>for <span>somewhere new.</span></h2>
+      <a href="/listings/new" class="closer-cta">Put your place on the map <span><i class="fa-solid fa-arrow-up-right-from-square"></i></span></a>
+    </div>
+    <span class="closer-mark" aria-hidden="true">W.</span>
+  </section>
+</main>
 
 <script>
-  let taxSwitch=document.getElementById("flexSwitchCheckDefault");
-  taxSwitch.addEventListener("click",()=>{
-    let taxInfo=document.getElementsByClassName("tax-info");
-    for (let info of taxInfo){
-      if(info.style.display!="inline"){
-        info.style.display="inline";
-      } else {
-        info.style.display="none";
-      }
-    }
+  const taxSwitch = document.getElementById("flexSwitchCheckDefault");
+  taxSwitch.addEventListener("change", () => {
+    document.querySelectorAll(".tax-info").forEach((info) => {
+      info.classList.toggle("tax-info-visible", taxSwitch.checked);
+    });
   });
 </script>

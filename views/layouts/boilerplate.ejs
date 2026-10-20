@@ -21,6 +21,20 @@
        <%- body %> 
     </div>
     <%- include("../includes/footer.ejs") %>
+    <div class="modal fade wander-confirm-modal" id="wanderConfirmModal" tabindex="-1" aria-labelledby="wanderConfirmTitle" aria-describedby="wanderConfirmMessage" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="wander-confirm-icon" aria-hidden="true"><i class="fa-regular fa-trash-can"></i></div>
+          <h2 id="wanderConfirmTitle">Remove this?</h2>
+          <p id="wanderConfirmMessage">This action can’t be undone.</p>
+          <div class="wander-confirm-actions">
+            <button type="button" class="wander-confirm-cancel" data-bs-dismiss="modal">Keep it</button>
+            <button type="button" class="wander-confirm-submit" id="wanderConfirmSubmit">Yes, remove</button>
+          </div>
+          <button type="button" class="wander-confirm-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="/js/script.js"></script>
   </body>
